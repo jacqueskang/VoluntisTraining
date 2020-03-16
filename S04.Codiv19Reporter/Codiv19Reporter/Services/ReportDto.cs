@@ -1,45 +1,37 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace Codiv19Reporter.Services
 {
     public class ReportDto
     {
-        private readonly HashSet<string> _symptoms = new HashSet<string>();
-
         public static ReportDto WithoutSymptoms()
-            => new ReportDto(false);
+            => new ReportDto { HaveSymptoms = false };
 
         public static ReportDto WithSymptoms(bool fever, bool cough, bool headache, bool others)
         {
-            var report = new ReportDto(true);
+            var report = new ReportDto { HaveSymptoms = true };
             if (fever)
             {
-                report._symptoms.Add("Fever");
+                report.Symptoms.Add("Fever");
             }
             if (cough)
             {
-                report._symptoms.Add("Cough");
+                report.Symptoms.Add("Cough");
             }
             if (headache)
             {
-                report._symptoms.Add("Headache");
+                report.Symptoms.Add("Headache");
             }
             if (others)
             {
-                report._symptoms.Add("Others");
+                report.Symptoms.Add("Others");
             }
 
             return report;
         }
 
-        private ReportDto(bool haveSymptoms)
-        {
-            HaveSymptoms = haveSymptoms;
-        }
+        public bool HaveSymptoms { get; set; }
 
-        public bool HaveSymptoms { get; }
-
-        public IEnumerable<string> Symptoms => _symptoms.ToList().AsReadOnly();
+        public List<string> Symptoms { get; set; } = new List<string>();
     }
 }

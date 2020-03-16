@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Codiv19Reporter.Options;
 using Codiv19Reporter.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.EventGrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,7 +36,9 @@ namespace Codiv19Reportor
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddScoped<IReportService, ReportService>();
+            services
+                .Configure<TopicOptions>(Configuration.GetSection("Topic"))
+                .AddScoped<IReportService, ReportService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

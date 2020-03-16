@@ -4,7 +4,9 @@
   "parameters": {},
   "variables": {
     "aspName": "[concat('asp-', uniqueString(resourceGroup().id))]",
-    "appName": "[concat('app-', uniqueString(resourceGroup().id))]"
+    "appName": "[concat('app-', uniqueString(resourceGroup().id))]",
+    "topicName": "[concat('topic-', uniqueString(resourceGroup().id))]",
+    "storageAccountName": "[concat('st', uniqueString(resourceGroup().id))]"
   },
   "resources": [
     {
@@ -29,11 +31,38 @@
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('aspName'))]",
         "siteConfig": {
           "appSettings": [
-
+            {
+              "name": "Topic:Endpoint",
+              "value": "[reference(variables('topicName')).endpoint]"
+            },
+            {
+              "name": "Topic:AccessKey",
+              "value": "[listKeys(variables('topicName'), '2019-06-01').key1]"
+            }
           ],
           "connectionStrings": [
           ]
         }
+      }
+    },
+    {
+      "type": "Microsoft.EventGrid/topics",
+      "apiVersion": "2019-06-01",
+      "name": "[variables('topicName')]",
+      "location": "[resourceGroup().location]"
+    },
+    {
+      "name": "[variables('storageAccountName')]",
+      "type": "Microsoft.Storage/storageAccounts",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2019-04-01",
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "supportsHttpsTrafficOnly": true,
+        "accessTier": "Hot"
       }
     }
   ]
