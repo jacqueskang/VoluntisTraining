@@ -1,0 +1,68 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+
+    var style = Model.HaveSymptoms ? "" : "display: none;";
+}
+
+<h2>Mon état du jour</h2>
+
+<form method="post">
+    <div class="text-danger" asp-validation-summary="All"></div>
+
+    <div class="custom-control custom-radio mb-2">
+        <input id="nosymptoms" type="radio" asp-for="HaveSymptoms" class="custom-control-input" value="false">
+        <label class="custom-control-label" for="nosymptoms">&#x1F60A; Je n'ai pas de symptômes</label>
+    </div>
+
+    <div class="custom-control custom-radio">
+        <input id="havesymptoms" type="radio" asp-for="HaveSymptoms" class="custom-control-input" value="true">
+        <label class="custom-control-label" for="havesymptoms">&#x1F637; J'ai de symptômes</label>
+    </div>
+
+    <div class="ml-4" id="symptoms" style="@style">
+        <div class="custom-control custom-checkbox">
+            <input id="fever" type="checkbox" asp-for="Fever" class="custom-control-input">
+            <label class="custom-control-label" for="fever">&#x1F912; J'ai fièvre</label>
+        </div>
+
+        <div class="custom-control custom-checkbox">
+            <input id="cough" type="checkbox" asp-for="Cough" class="custom-control-input">
+            <label class="custom-control-label" for="cough">&#x1F927; j'ai toux</label>
+        </div>
+
+        <div class="custom-control custom-checkbox">
+            <input id="headache" type="checkbox" asp-for="Headache" class="custom-control-input">
+            <label class="custom-control-label" for="headache">&#x1F915; J'ai mal de crâne</label>
+        </div>
+
+        <div class="custom-control custom-checkbox">
+            <input id="headache" type="checkbox" asp-for="Others" class="custom-control-input">
+            <label class="custom-control-label" for="headache">&#x1F623; Autres</label>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <input type="submit" class="btn btn-primary" value="Soumettre" />
+    </div>
+</form>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#nosymptoms').change(function () {
+                if (this.checked) {
+                    $('#symptoms').hide();
+                }
+            })
+
+            $('#havesymptoms').change(function () {
+                if (this.checked) {
+                    $('#symptoms').show();
+                }
+            })
+        })
+    </script>
+}
