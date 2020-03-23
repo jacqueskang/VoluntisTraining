@@ -8,7 +8,8 @@
     "topicName": "[concat('topic-', uniqueString(resourceGroup().id))]",
     "storageAccountName": "[concat('st', uniqueString(resourceGroup().id))]",
     "aspNameFunctions": "[concat('asp-', uniqueString(resourceGroup().id), '-functions')]",
-    "funName": "[concat('fun-', uniqueString(resourceGroup().id))]"
+    "funName": "[concat('fun-', uniqueString(resourceGroup().id))]",
+    "appInsightsName": "[concat('ais-', uniqueString(resourceGroup().id))]"
   },
   "resources": [
     {
@@ -112,7 +113,7 @@
             },
             {
               "name": "WEBSITE_CONTENTSHARE",
-              "value": "dotnet"
+              "value": "[variables('funName')]"
             },
             {
               "name": "Topic:Endpoint",
@@ -121,12 +122,26 @@
             {
               "name": "Topic:AccessKey",
               "value": "[listKeys(variables('topicName'), '2019-06-01').key1]"
+            },
+            {
+              "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+              "value": "[reference(variables('appInsightsName'), '2015-05-01').InstrumentationKey]"
             }
           ],
           "connectionStrings": [],
           "ipSecurityRestrictions": [],
           "scmIpSecurityRestrictions": []
         }
+      }
+    },
+    {
+      "name": "[variables('appInsightsName')]",
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2015-05-01",
+      "location": "[resourceGroup().location]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web"
       }
     }
   ]
