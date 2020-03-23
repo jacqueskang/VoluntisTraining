@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace Codiv19Reportor.Pages
@@ -31,17 +32,26 @@ namespace Codiv19Reportor.Pages
         [BindProperty]
         public bool Others { get; set; }
 
+        [Required]
+        [BindProperty]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (HaveSymptoms && !Fever && !Cough && !Headache && !Others)
             {
                 ModelState.AddModelError(string.Empty, "Vous devez sélectionner au moin un symptôme.");
+            }
+
+            if (!ModelState.IsValid)
+            {
                 return Page();
             }
 
             ReportDto report = HaveSymptoms
-                ? ReportDto.WithSymptoms(Fever, Cough, Headache, Others)
-                : ReportDto.WithoutSymptoms();
+                ? ReportDto.WithSymptoms(Email, Fever, Cough, Headache, Others)
+                : ReportDto.WithoutSymptoms(Email);
 
             try
             {

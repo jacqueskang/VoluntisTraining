@@ -4,12 +4,20 @@ namespace Codiv19Reporter.Services
 {
     public class ReportDto
     {
-        public static ReportDto WithoutSymptoms()
-            => new ReportDto { HaveSymptoms = false };
+        public static ReportDto WithoutSymptoms(string email)
+            => new ReportDto
+            {
+                Email = email,
+                HaveSymptoms = false
+            };
 
-        public static ReportDto WithSymptoms(bool fever, bool cough, bool headache, bool others)
+        public static ReportDto WithSymptoms(string email, bool fever, bool cough, bool headache, bool others)
         {
-            var report = new ReportDto { HaveSymptoms = true };
+            var report = new ReportDto
+            {
+                Email = email,
+                HaveSymptoms = true
+            };
             if (fever)
             {
                 report.Symptoms.Add("Fever");
@@ -30,8 +38,8 @@ namespace Codiv19Reporter.Services
             return report;
         }
 
+        public string Email { get; set; }
         public bool HaveSymptoms { get; set; }
-
         public List<string> Symptoms { get; set; } = new List<string>();
     }
 }

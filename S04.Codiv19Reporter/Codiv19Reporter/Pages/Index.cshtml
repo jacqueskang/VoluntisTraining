@@ -9,7 +9,7 @@
 <h2>Mon état du jour</h2>
 
 <form method="post">
-    <div class="text-danger" asp-validation-summary="All"></div>
+    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
 
     <div class="custom-control custom-radio mb-2">
         <input id="nosymptoms" type="radio" asp-for="HaveSymptoms" class="custom-control-input" value="false">
@@ -41,6 +41,12 @@
             <input id="others" type="checkbox" asp-for="Others" class="custom-control-input">
             <label class="custom-control-label" for="others">&#x1F623; Autres</label>
         </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input class="form-control" asp-for="Email">
+        <span class="text-danger" asp-validation-for="Email"></span>
     </div>
 
     <div class="mt-4">
