@@ -44,7 +44,7 @@ namespace Codiv19Reportor.Pages
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (HaveSymptoms && !Fever && !Cough && !Headache && !Others)
+            if (HaveSymptoms && !Fever && !Cough && !Headache && !BreathingDifficulty && !Others)
             {
                 ModelState.AddModelError(string.Empty, "Vous devez sélectionner au moin un symptôme.");
             }
