@@ -14,9 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codiv19.Events", "Codiv19.Events\Codiv19.Events.csproj", "{FDC7C2B1-D35E-468F-8E7E-C0ABB106C08E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codiv19.Primitives", "Codiv19.Primitives\Codiv19.Primitives.csproj", "{74A41078-4982-42F3-98C3-ECF42026348C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codiv19.Primitives", "Codiv19.Primitives\Codiv19.Primitives.csproj", "{74A41078-4982-42F3-98C3-ECF42026348C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Codiv19Functions", "Codiv19Functions\Codiv19Functions.csproj", "{3B04B38A-606B-43FB-B7F1-54554F6763EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codiv19Functions", "Codiv19Functions\Codiv19Functions.csproj", "{3B04B38A-606B-43FB-B7F1-54554F6763EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

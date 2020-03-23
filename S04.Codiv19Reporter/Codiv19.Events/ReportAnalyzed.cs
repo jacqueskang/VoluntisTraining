@@ -2,15 +2,15 @@
 {
     public class ReportAnalyzed
     {
-        public ReportAnalyzed(string email, bool isInfected, string recommendation)
+        public ReportAnalyzed(string email, bool isSuspected, string recommendation)
         {
             Email = email;
-            IsInfected = isInfected;
+            IsSuspected = isSuspected;
             Recommendation = recommendation;
         }
 
         public string Email { get; }
-        public bool IsInfected { get; }
+        public bool IsSuspected { get; }
         public string Recommendation { get; }
     }
 }
