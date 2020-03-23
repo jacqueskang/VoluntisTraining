@@ -1,4 +1,5 @@
 ﻿using Codiv19.Events;
+using Codiv19.Primitives;
 using Codiv19Reporter.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -31,6 +32,9 @@ namespace Codiv19Reportor.Pages
         public bool Headache { get; set; }
 
         [BindProperty]
+        public bool BreathingDifficulty { get; set; }
+
+        [BindProperty]
         public bool Others { get; set; }
 
         [Required]
@@ -50,13 +54,34 @@ namespace Codiv19Reportor.Pages
                 return Page();
             }
 
-            ReportSubmitted @event = HaveSymptoms
-                ? ReportSubmitted.WithSymptoms(Email, Fever, Cough, Headache, Others)
-                : ReportSubmitted.WithoutSymptoms(Email);
+            Symptoms symptoms = Symptoms.None;
+            if (HaveSymptoms)
+            {
+                if (Fever)
+                {
+                    symptoms |= Symptoms.Fever;
+                }
+                if (Cough)
+                {
+                    symptoms |= Symptoms.Cough;
+                }
+                if (Headache)
+                {
+                    symptoms |= Symptoms.Headache;
+                }
+                if (BreathingDifficulty)
+                {
+                    symptoms |= Symptoms.BreathingDifficulty;
+                }
+                if (Others)
+                {
+                    symptoms |= Symptoms.Others;
+                }
+            }
 
             try
             {
-                await _service.SubmitReportAsync(@event);
+                await _service.SubmitReportAsync(new ReportSubmitted(Email, symptoms));
                 TempData.SetInfoMessage("Le rapport a été envoyé.");
             }
             catch (Exception ex)

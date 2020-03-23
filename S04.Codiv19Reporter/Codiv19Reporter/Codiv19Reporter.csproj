@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Codiv19.Events\Codiv19.Events.csproj" />
+    <ProjectReference Include="..\Codiv19.Primitives\Codiv19.Primitives.csproj" />
   </ItemGroup>
 
 </Project>

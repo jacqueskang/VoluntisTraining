@@ -38,6 +38,11 @@
         </div>
 
         <div class="custom-control custom-checkbox">
+            <input id="breathing" type="checkbox" asp-for="BreathingDifficulty" class="custom-control-input">
+            <label class="custom-control-label" for="breathing">&#x1F628; J'ai mal à respirer</label>
+        </div>
+
+        <div class="custom-control custom-checkbox">
             <input id="others" type="checkbox" asp-for="Others" class="custom-control-input">
             <label class="custom-control-label" for="others">&#x1F623; Autres</label>
         </div>
@@ -50,7 +55,7 @@
     </div>
 
     <div class="mt-4">
-        <input type="submit" class="btn btn-primary" value="Soumettre" />
+        <input type="submit" class="btn btn-primary" value="Soumettre" onclick="return confirm('Êtes-vous sûrs(es) ?')" />
     </div>
 </form>
 
