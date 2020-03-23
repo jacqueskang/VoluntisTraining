@@ -1,7 +1,9 @@
-﻿using Codiv19Reporter.Options;
+﻿using Codiv19.Events;
+using Codiv19Reporter.Options;
 using Microsoft.Azure.EventGrid;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 
@@ -16,7 +18,7 @@ namespace Codiv19Reporter.Services
             _options = options;
         }
 
-        public async Task SendReportAsync(ReportDto report)
+        public async Task SubmitReportAsync(ReportSubmitted @event)
         {
             TopicOptions topic = _options.CurrentValue;
             var credentials = new TopicCredentials(topic.AccessKey);
@@ -28,9 +30,9 @@ namespace Codiv19Reporter.Services
                     Id = Guid.NewGuid().ToString(),
                     Subject = "Report submitted",
                     EventTime = DateTime.UtcNow,
-                    EventType = "ReportSubmitted",
+                    EventType = nameof(ReportSubmitted),
                     DataVersion = "1.0",
-                    Data = report
+                    Data = JsonConvert.SerializeObject(@event)
                 }
             });
         }

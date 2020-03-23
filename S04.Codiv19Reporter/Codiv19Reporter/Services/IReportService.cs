@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using Codiv19.Events;
+using System.Threading.Tasks;
 
 namespace Codiv19Reporter.Services
 {
     public interface IReportService
     {
-        Task SendReportAsync(ReportDto report);
+        Task SubmitReportAsync(ReportSubmitted @event);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Codiv19Reporter.Services;
+﻿using Codiv19.Events;
+using Codiv19Reporter.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -49,13 +50,13 @@ namespace Codiv19Reportor.Pages
                 return Page();
             }
 
-            ReportDto report = HaveSymptoms
-                ? ReportDto.WithSymptoms(Email, Fever, Cough, Headache, Others)
-                : ReportDto.WithoutSymptoms(Email);
+            ReportSubmitted @event = HaveSymptoms
+                ? ReportSubmitted.WithSymptoms(Email, Fever, Cough, Headache, Others)
+                : ReportSubmitted.WithoutSymptoms(Email);
 
             try
             {
-                await _service.SendReportAsync(report);
+                await _service.SubmitReportAsync(@event);
                 TempData.SetInfoMessage("Le rapport a été envoyé.");
             }
             catch (Exception ex)
