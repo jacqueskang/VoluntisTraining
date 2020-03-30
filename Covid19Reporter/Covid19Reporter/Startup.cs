@@ -1,15 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Covid19Reporter.Options;
 using Covid19Reporter.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.EventGrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -37,6 +33,11 @@ namespace Covid19Reportor
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services
+                .AddAuthentication(AzureADDefaults.AuthenticationScheme)
+                .AddAzureAD(options => Configuration.Bind("AzureAd", options))
+            ;
+
+            services
                 .Configure<TopicOptions>(Configuration.GetSection("Topic"))
                 .AddScoped<IReportService, ReportService>();
         }
@@ -58,6 +59,8 @@ namespace Covid19Reportor
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+
+            app.UseAuthentication();
 
             app.UseMvc();
         }

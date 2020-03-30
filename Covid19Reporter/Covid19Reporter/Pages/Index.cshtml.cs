@@ -1,6 +1,7 @@
 ﻿using Covid19.Events;
 using Covid19.Primitives;
 using Covid19Reporter.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace Covid19Reportor.Pages
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly IReportService _service;
@@ -46,6 +48,11 @@ namespace Covid19Reportor.Pages
         [DataType(DataType.EmailAddress)]
         [Display(Name = "Vers quelle adresse e-mail vous souhaitez recevoir les résultats ?")]
         public string Email { get; set; }
+
+        public void OnGet()
+        {
+            Email = User.Identity.Name;
+        }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -88,7 +95,7 @@ namespace Covid19Reportor.Pages
 
             try
             {
-                await _service.SubmitReportAsync(new ReportSubmitted(Email, symptoms, position));
+                await _service.SubmitReportAsync(new ReportSubmitted(User.Identity.Name, Email, symptoms, position));
                 TempData.SetInfoMessage("Vous allez recevoir bientôt notre recommendation.");
             }
             catch (Exception ex)
