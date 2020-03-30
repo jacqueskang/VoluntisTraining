@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace Covid19Reportor.Pages
@@ -36,6 +37,9 @@ namespace Covid19Reportor.Pages
 
         [BindProperty]
         public bool Others { get; set; }
+
+        [BindProperty]
+        public string Position { get; set; }
 
         [Required]
         [BindProperty]
@@ -80,9 +84,11 @@ namespace Covid19Reportor.Pages
                 }
             }
 
+            LatLng.TryParse(Position, CultureInfo.InvariantCulture, out LatLng position);
+
             try
             {
-                await _service.SubmitReportAsync(new ReportSubmitted(Email, symptoms));
+                await _service.SubmitReportAsync(new ReportSubmitted(Email, symptoms, position));
                 TempData.SetInfoMessage("Vous allez recevoir bientôt notre recommendation.");
             }
             catch (Exception ex)

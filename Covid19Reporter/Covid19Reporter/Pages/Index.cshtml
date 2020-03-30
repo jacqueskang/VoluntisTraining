@@ -51,6 +51,11 @@
     </div>
 
     <div class="form-group">
+        <label>Votre position</label>
+        <input class="form-control" asp-for="Position" readonly />
+    </div>
+
+    <div class="form-group">
         <label asp-for="Email"></label>
         <input class="form-control" asp-for="Email">
         <span class="text-danger" asp-validation-for="Email"></span>
@@ -76,6 +81,16 @@
                     $('#symptoms').show();
                 }
             })
+
+            navigator.geolocation.getCurrentPosition(function (pos) {
+                console.log(pos.coords)
+                $('input#Position').val(`${pos.coords.latitude}, ${pos.coords.longitude}`);
+            }, function () {
+            }, {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            });
         })
     </script>
 }
