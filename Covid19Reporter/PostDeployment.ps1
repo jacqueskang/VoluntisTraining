@@ -11,7 +11,8 @@ $StorageAccountName = "stcovid19$ResourceGroupHash"
 $StorageAccount = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountName
 $QueueNames = 
 	"queue-new-reports",
-	"queue-email-notifications"
+	"queue-email-notifications",
+	"queue-new-positions"
 foreach ($QueueName in $QueueNames) {
 	$StorageQueue = Get-AzStorageQueue -Context $StorageAccount.Context -Name $QueueName -ErrorAction Ignore
 	if ($null -eq $StorageQueue) {
@@ -32,6 +33,10 @@ $Subscriptions =
 @{
 	EventType = "ReportAnalyzed"
 	QueueName = "queue-email-notifications"
+},
+@{
+	EventType = "ReportAnalyzed"
+	QueueName = "queue-new-positions"
 }
 $TopicName = "topic-covid19-$ResourceGroupHash"
 foreach ($Item in $Subscriptions) {

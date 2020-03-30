@@ -31,19 +31,19 @@ namespace Covid19Functions
             ReportAnalyzed analysis;
             if (report.Symptoms.HasFlag(Symptoms.BreathingDifficulty))
             {
-                analysis = new ReportAnalyzed(report.Email, true, "Appelez 15");
+                analysis = new ReportAnalyzed(report.Email, report.Position, true, "Appelez 15");
             }
             else if (Enum.GetValues(typeof(Symptoms)).Cast<Symptoms>().Count(x => report.Symptoms.HasFlag(x)) > 1)
             {
-                analysis = new ReportAnalyzed(report.Email, true, "Appeler votre médecin.");
+                analysis = new ReportAnalyzed(report.Email, report.Position, true, "Appeler votre médecin.");
             }
             else if (report.Symptoms != Symptoms.None)
             {
-                analysis = new ReportAnalyzed(report.Email, false, "Continuez à surveiller votre état et restez chez-vous.");
+                analysis = new ReportAnalyzed(report.Email, report.Position, false, "Continuez à surveiller votre état et restez chez-vous.");
             }
             else
             {
-                analysis = new ReportAnalyzed(report.Email, false, "Vous êtes très bien ne vous inquiétez pas.");
+                analysis = new ReportAnalyzed(report.Email, report.Position, false, "Vous êtes très bien ne vous inquiétez pas.");
             }
 
             log.LogInformation($"Analyzed. Publishing results...");
