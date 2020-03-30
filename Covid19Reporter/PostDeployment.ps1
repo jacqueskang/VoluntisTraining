@@ -1,13 +1,13 @@
 # TODO: replace with correct value
-$SubscriptionName = "jkang"
-$ResourceGroupName = "rg-covid19-reporter"
-$ResourceGroupHash = "nchikkdvlumow"
+$SubscriptionName = "Microsoft Azure/ Development"
+$ResourceGroupName = "rg-azurelearning-jkang"
+$ResourceGroupHash = "zeb3g5gllfxvw"
 
 Set-AzContext -Subscription $SubscriptionName
 $Subscription = Get-AzSubscription -SubscriptionName $SubscriptionName
 
 # Create storage queues if necessary
-$StorageAccountName = "st$ResourceGroupHash"
+$StorageAccountName = "stcovid19$ResourceGroupHash"
 $StorageAccount = Get-AzStorageAccount -ResourceGroupName $ResourceGroupName -Name $StorageAccountName
 $QueueNames = 
 	"queue-new-reports",
@@ -33,7 +33,7 @@ $Subscriptions =
 	EventType = "ReportAnalyzed"
 	QueueName = "queue-email-notifications"
 }
-$TopicName = "topic-$ResourceGroupHash"
+$TopicName = "topic-covid19-$ResourceGroupHash"
 foreach ($Item in $Subscriptions) {
 	$EventSubscriptionName = $Item.QueueName
 	$EventSubscription = Get-AzEventGridSubscription `

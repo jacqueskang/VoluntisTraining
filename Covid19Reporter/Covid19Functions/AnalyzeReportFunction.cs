@@ -1,20 +1,23 @@
 using Covid19.Events;
 using Covid19.Primitives;
-using Microsoft.Azure.EventGrid;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.EventGrid;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Covid19Functions
 {
     public static class AnalyzeReportFunction
     {
         [FunctionName("analyze-report")]
-        public static async Task Run([QueueTrigger("queue-new-reports", Connection = "AzureWebJobsStorage")]EventGridEvent @event, ILogger log)
+        [return: EventGrid(TopicEndpointUri = "Topic:Endpoint", TopicKeySetting = "Topic:AccessKey")]
+        public static EventGridEvent Run(
+            [QueueTrigger("queue-new-reports", Connection = "AzureWebJobsStorage")]
+            EventGridEvent @event,
+            ILogger log)
         {
             string data = @event.Data as string;
             if (string.IsNullOrEmpty(data))
@@ -44,22 +47,15 @@ namespace Covid19Functions
             }
 
             log.LogInformation($"Analyzed. Publishing results...");
-
-            string accessKey = Environment.GetEnvironmentVariable("Topic:AccessKey", EnvironmentVariableTarget.Process);
-            Uri endpoint = new Uri(Environment.GetEnvironmentVariable("Topic:Endpoint", EnvironmentVariableTarget.Process));
-            var credentials = new TopicCredentials(accessKey);
-            var client = new EventGridClient(credentials);
-            await client.PublishEventsAsync(endpoint.Host, new[] {
-                new EventGridEvent
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Subject = "Report analyzed",
-                    EventTime = DateTime.UtcNow,
-                    EventType = nameof(ReportAnalyzed),
-                    DataVersion = "1.0",
-                    Data = JsonConvert.SerializeObject(analysis)
-                }
-            });
+            return new EventGridEvent
+            {
+                Id = Guid.NewGuid().ToString(),
+                Subject = "Report analyzed",
+                EventTime = DateTime.UtcNow,
+                EventType = nameof(ReportAnalyzed),
+                DataVersion = "1.0",
+                Data = JsonConvert.SerializeObject(analysis)
+            };
         }
     }
 }

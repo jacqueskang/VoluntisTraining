@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Covid19.Primitives", "Covid
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Covid19Functions", "Covid19Functions\Covid19Functions.csproj", "{3B04B38A-606B-43FB-B7F1-54554F6763EF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codiv19Reporter", "Covid19Reporter\Codiv19Reporter.csproj", "{05AAA9B0-059C-4827-988F-B8AB7A7D3A69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Covid19Reporter", "Covid19Reporter\Covid19Reporter.csproj", "{05AAA9B0-059C-4827-988F-B8AB7A7D3A69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

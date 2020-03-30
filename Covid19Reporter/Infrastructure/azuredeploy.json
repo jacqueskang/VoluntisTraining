@@ -1,15 +1,22 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-  "parameters": {},
+  "parameters": {
+    "sendGridKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "SendGrid key"
+      }
+    }
+  },
   "variables": {
-    "aspName": "[concat('asp-', uniqueString(resourceGroup().id))]",
-    "appName": "[concat('app-', uniqueString(resourceGroup().id))]",
-    "topicName": "[concat('topic-', uniqueString(resourceGroup().id))]",
-    "storageAccountName": "[concat('st', uniqueString(resourceGroup().id))]",
-    "aspNameFunctions": "[concat('asp-', uniqueString(resourceGroup().id), '-functions')]",
-    "funName": "[concat('fun-', uniqueString(resourceGroup().id))]",
-    "appInsightsName": "[concat('ais-', uniqueString(resourceGroup().id))]"
+    "aspName": "[concat('asp-covid19-', uniqueString(resourceGroup().id))]",
+    "appName": "[concat('app-covid19-', uniqueString(resourceGroup().id))]",
+    "topicName": "[concat('topic-covid19-', uniqueString(resourceGroup().id))]",
+    "storageAccountName": "[concat('stcovid19', uniqueString(resourceGroup().id))]",
+    "aspNameFunctions": "[concat('asp-covid19-', uniqueString(resourceGroup().id), '-functions')]",
+    "funName": "[concat('fun-covid19-', uniqueString(resourceGroup().id))]",
+    "appInsightsName": "[concat('ais-covid19-', uniqueString(resourceGroup().id))]"
   },
   "resources": [
     {
@@ -122,6 +129,10 @@
             {
               "name": "Topic:AccessKey",
               "value": "[listKeys(variables('topicName'), '2019-06-01').key1]"
+            },
+            {
+              "name": "SendGridKey",
+              "value": "[parameters('sendGridKey')]"
             },
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
