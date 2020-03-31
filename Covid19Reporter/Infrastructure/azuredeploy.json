@@ -16,7 +16,8 @@
     "storageAccountName": "[concat('stcovid19', uniqueString(resourceGroup().id))]",
     "aspNameFunctions": "[concat('asp-covid19-', uniqueString(resourceGroup().id), '-functions')]",
     "funName": "[concat('fun-covid19-', uniqueString(resourceGroup().id))]",
-    "appInsightsName": "[concat('ais-covid19-', uniqueString(resourceGroup().id))]"
+    "appInsightsName": "[concat('ais-covid19-', uniqueString(resourceGroup().id))]",
+    "databaseAccountName": "[concat('dba-codiv19-', uniqueString(resourceGroup().id))]"
   },
   "resources": [
     {
@@ -111,10 +112,6 @@
               "value": "dotnet"
             },
             {
-              "name": "QueueNameNewReports",
-              "value": "queue-new-reports"
-            },
-            {
               "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
               "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageAccountName'),';AccountKey=',listKeys(variables('storageAccountName'), '2019-04-01').keys[0].value)]"
             },
@@ -133,6 +130,10 @@
             {
               "name": "SendGridKey",
               "value": "[parameters('sendGridKey')]"
+            },
+            {
+              "name": "CosmosDBConnectionString",
+              "value": "[listConnectionStrings(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('databaseAccountName')), '2019-12-12').connectionStrings[0].connectionString]"
             },
             {
               "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
@@ -155,6 +156,76 @@
       "properties": {
         "Application_Type": "web"
       }
+    },
+    {
+      "type": "Microsoft.DocumentDB/databaseAccounts",
+      "name": "[variables('databaseAccountName')]",
+      "apiVersion": "2019-08-01",
+      "kind": "GlobalDocumentDB",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "consistencyPolicy": {
+          "defaultConsistencyLevel": "Eventual"
+        },
+        "locations": [
+          {
+            "locationName": "[resourceGroup().location]",
+            "failoverPriority": 0
+          },
+          {
+            "locationName": "Switzerland North",
+            "failoverPriority": 1
+          }
+        ],
+        "databaseAccountOfferType": "Standard"
+      },
+      "resources": [
+        {
+          "type": "sqlDatabases",
+          "name": "cosmosdb-covid19",
+          "apiVersion": "2019-08-01",
+          "dependsOn": [
+            "[variables('databaseAccountName')]"
+          ],
+          "properties": {
+            "resource": {
+              "id": "cosmosdb-covid19"
+            }
+          },
+          "resources": [
+            {
+              "type": "containers",
+              "name": "positions",
+              "apiVersion": "2019-08-01",
+              "dependsOn": [
+                "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('databaseAccountName'), 'cosmosdb-covid19')]"
+              ],
+              "properties": {
+                "resource": {
+                  "id": "positions",
+                  "partitionKey": {
+                    "paths": [
+                      "/userName"
+                    ],
+                    "kind": "Hash"
+                  },
+                  "indexingPolicy": {
+                    "indexingMode": "consistent",
+                    "includedPaths": [
+                      {
+                        "path": "/*"
+                      }
+                    ],
+                    "excludedPaths": [
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        }
+
+      ]
     }
   ]
 }
