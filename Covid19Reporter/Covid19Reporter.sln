@@ -7,6 +7,7 @@ Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9D8EF1F6-388C-4F27-9D4B-CC9831A2B404}"
 	ProjectSection(SolutionItems) = preProject
+		architecture.md = architecture.md
 		PostDeployment.ps1 = PostDeployment.ps1
 	EndProjectSection
 EndProject
