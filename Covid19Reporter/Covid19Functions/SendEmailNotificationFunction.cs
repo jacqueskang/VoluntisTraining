@@ -3,10 +3,9 @@ using Covid19.Primitives;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SendGrid.Helpers.Mail;
 using System;
-using System.Web;
 
 namespace Covid19Functions
 {
@@ -19,19 +18,22 @@ namespace Covid19Functions
             EventGridEvent @event,
             ILogger log)
         {
-            log.LogInformation("Deserializing report...");
-            ReportAnalyzed analysis = JsonConvert.DeserializeObject<ReportAnalyzed>(@event.Data as string);
-
             log.LogInformation("Sending email notification...");
 
-            string plainTextContent = "Vous avez saisi les symptômes suivant(s) :\n";
-            string htmlContent = "<p>Vous avez saisi les symptômes suivant(s) : <ul>";
+            ReportAnalyzed analysis = ((JObject)@event.Data).ToObject<ReportAnalyzed>();
+            string plainTextContent = $"{analysis.SubmitTime:D}, vous avez saisi les symptômes suivant(s):\n";
+            string htmlContent = $"<p>{analysis.SubmitTime:D}, vous avez saisi les symptômes suivant(s) : <ul>";
             foreach (Enum value in Enum.GetValues(typeof(Symptoms)))
             {
+                if ((Symptoms)value == Symptoms.None)
+                {
+                    continue;
+                }
+
                 if (analysis.Symptoms.HasFlag(value))
                 {
-                    plainTextContent += $" - {value.ToString()}\n";
-                    htmlContent += $"<li>{value.ToString()}</li>";
+                    plainTextContent += $" - {value}\n";
+                    htmlContent += $"<li>{value}</li>";
                 }
             }
             plainTextContent += $"\nNotre recommendation est : {analysis.Recommendation}";

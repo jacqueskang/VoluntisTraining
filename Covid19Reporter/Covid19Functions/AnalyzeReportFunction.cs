@@ -4,7 +4,7 @@ using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.EventGrid;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 
@@ -19,35 +19,29 @@ namespace Covid19Functions
             EventGridEvent @event,
             ILogger log)
         {
-            string data = @event.Data as string;
-            if (string.IsNullOrEmpty(data))
-            {
-                throw new InvalidOperationException("Data is empty");
-            }
+            log.LogInformation($"Received report. Analyzing...");
 
-            log.LogInformation($"Received report {data}. Analyzing...");
-
-            ReportSubmitted report = JsonConvert.DeserializeObject<ReportSubmitted>(data);
+            ReportSubmitted report = ((JObject)@event.Data).ToObject<ReportSubmitted>();
             ReportAnalyzed analysis;
             if (report.Symptoms.HasFlag(Symptoms.BreathingDifficulty))
             {
-                analysis = new ReportAnalyzed(report.UserName, report.Symptoms, report.Email, report.Position, true,
-                    "Appelez 15");
+                analysis = new ReportAnalyzed(report.UserName, report.Symptoms, report.Email, report.Position, @event.EventTime,
+                    "Appelez 15", isSuspected: true);
             }
             else if (Enum.GetValues(typeof(Symptoms)).Cast<Symptoms>().Count(x => report.Symptoms.HasFlag(x)) > 1)
             {
-                analysis = new ReportAnalyzed(report.UserName, report.Symptoms, report.Email, report.Position, true,
-                    "Appeler votre médecin.");
+                analysis = new ReportAnalyzed(report.UserName, report.Symptoms, report.Email, report.Position, @event.EventTime,
+                    "Appeler votre médecin.", isSuspected: true);
             }
             else if (report.Symptoms != Symptoms.None)
             {
-                analysis = new ReportAnalyzed(report.UserName, report.Symptoms, report.Email, report.Position, false,
-                    "Continuez à surveiller votre état et restez chez-vous.");
+                analysis = new ReportAnalyzed(report.UserName, report.Symptoms, report.Email, report.Position, @event.EventTime,
+                    "Continuez à surveiller votre état et restez chez-vous.", isSuspected: false);
             }
             else
             {
-                analysis = new ReportAnalyzed(report.UserName, report.Symptoms, report.Email, report.Position, false,
-                    "Vous êtes très bien ne vous inquiétez pas.");
+                analysis = new ReportAnalyzed(report.UserName, report.Symptoms, report.Email, report.Position, @event.EventTime,
+                    "Vous êtes très bien ne vous inquiétez pas.", isSuspected: false);
             }
 
             log.LogInformation($"Analyzed. Publishing results...");
@@ -58,7 +52,7 @@ namespace Covid19Functions
                 EventTime = DateTime.UtcNow,
                 EventType = nameof(ReportAnalyzed),
                 DataVersion = "1.0",
-                Data = JsonConvert.SerializeObject(analysis)
+                Data = JObject.FromObject(analysis)
             };
         }
     }

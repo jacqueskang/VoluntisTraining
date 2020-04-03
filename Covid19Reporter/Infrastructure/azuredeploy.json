@@ -191,17 +191,17 @@
           "resources": [
             {
               "type": "containers",
-              "name": "positions",
+              "name": "patients",
               "apiVersion": "2019-08-01",
               "dependsOn": [
                 "[resourceId('Microsoft.DocumentDB/databaseAccounts/sqlDatabases', variables('databaseAccountName'), 'cosmosdb-covid19')]"
               ],
               "properties": {
                 "resource": {
-                  "id": "positions",
+                  "id": "patients",
                   "partitionKey": {
                     "paths": [
-                      "/userName"
+                      "/id"
                     ],
                     "kind": "Hash"
                   },

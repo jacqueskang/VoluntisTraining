@@ -4,6 +4,7 @@ using Microsoft.Azure.EventGrid;
 using Microsoft.Azure.EventGrid.Models;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Threading.Tasks;
 
@@ -32,7 +33,7 @@ namespace Covid19Reporter.Services
                     EventTime = DateTime.UtcNow,
                     EventType = nameof(ReportSubmitted),
                     DataVersion = "1.0",
-                    Data = JsonConvert.SerializeObject(@event)
+                    Data = JObject.FromObject(@event)
                 }
             });
         }
