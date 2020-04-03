@@ -14,7 +14,7 @@ namespace Covid19Functions
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             [CosmosDB(databaseName: "cosmosdb-covid19", collectionName: "patients",
                 ConnectionStringSetting = "CosmosDBConnectionString",
-                SqlQuery = "select c.position, c.isSuspected from c")]
+                SqlQuery = "SELECT c.id, c.position, c.isSuspected FROM c")]
             IEnumerable<dynamic> positions,
             ILogger log)
         {

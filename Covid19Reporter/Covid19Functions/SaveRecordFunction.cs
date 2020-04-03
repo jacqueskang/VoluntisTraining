@@ -24,14 +24,16 @@ namespace Covid19Functions
             log.LogInformation("Querying patient {UserName}...", report.UserName);
             var client = new CosmosClient(Environment.GetEnvironmentVariable("CosmosDBConnectionString"));
             Container container = client.GetDatabase("cosmosdb-covid19").GetContainer("patients");
-            QueryDefinition query = new QueryDefinition(@"SELECT
+            QueryDefinition query = new QueryDefinition(@"
+SELECT
     c.id,
+    c.userName,
     c.records
 FROM
     c
 WHERE
-    c.id = @id")
-                .WithParameter("@id", report.UserName);
+    c.userName = @userName")
+                .WithParameter("@userName", report.UserName);
             FeedResponse<Patient> results = await container.GetItemQueryIterator<Patient>(query).ReadNextAsync();
             Patient patient = results.FirstOrDefault() ?? Patient.Create(report.UserName);
             patient.AddRecord(report.Symptoms, report.Position, report.SubmitTime, report.Recommendation, report.IsSuspected);

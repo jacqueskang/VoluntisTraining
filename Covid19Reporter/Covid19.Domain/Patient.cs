@@ -11,7 +11,8 @@ namespace Covid19.Domain
         private readonly List<MedicalRecord> _records;
 
         public Patient(
-            string id,
+            Guid id,
+            string userName,
             IEnumerable<MedicalRecord> records)
         {
             if (records is null)
@@ -19,12 +20,16 @@ namespace Covid19.Domain
                 throw new ArgumentNullException(nameof(records));
             }
 
-            Id = id ?? throw new ArgumentNullException(nameof(id));
+            Id = id;
+            UserName = userName ?? throw new ArgumentNullException(nameof(id));
             _records = records.ToList();
         }
 
         [JsonProperty(PropertyName = "id")]
-        public string Id { get; }
+        public Guid Id { get; }
+
+        [JsonProperty(PropertyName = "userName")]
+        public string UserName { get; }
 
         [JsonProperty(PropertyName = "records")]
         public IEnumerable<MedicalRecord> Records => _records.AsReadOnly();
@@ -39,7 +44,7 @@ namespace Covid19.Domain
         public DateTime? UpdateTime => LatestRecord?.SubmitTime;
 
         public static Patient Create(string userName)
-            => new Patient(userName, Array.Empty<MedicalRecord>());
+            => new Patient(Guid.NewGuid(), userName, Array.Empty<MedicalRecord>());
 
         public void AddRecord(Symptoms symptoms, LatLng position, DateTime submitTime, string recommendation,
             bool isSuspected)

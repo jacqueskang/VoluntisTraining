@@ -201,7 +201,7 @@
                   "id": "patients",
                   "partitionKey": {
                     "paths": [
-                      "/id"
+                      "/userName"
                     ],
                     "kind": "Hash"
                   },
