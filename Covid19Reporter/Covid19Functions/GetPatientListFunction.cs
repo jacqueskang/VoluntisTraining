@@ -1,0 +1,25 @@
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+
+namespace Covid19Functions
+{
+    public static class GetPatientListFunction
+    {
+        [FunctionName("get-patient-list")]
+        public static IActionResult Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "patients")] HttpRequest req,
+            [CosmosDB(databaseName: "cosmosdb-covid19", collectionName: "patients",
+                ConnectionStringSetting = "CosmosDBConnectionString",
+                SqlQuery = "SELECT c.id, c.position, c.isSuspected FROM c")]
+            IEnumerable<dynamic> positions,
+            ILogger log)
+        {
+            log.LogInformation($"C# HTTP trigger function processed a request: {req.Path}");
+            return new OkObjectResult(positions);
+        }
+    }
+}

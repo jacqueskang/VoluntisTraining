@@ -7,14 +7,16 @@ using System.Collections.Generic;
 
 namespace Covid19Functions
 {
-    public static class GetPositionsFunction
+    public static class GetPatientDetailFunction
     {
-        [FunctionName("get-positions")]
+        [FunctionName("get-patient-detail")]
         public static IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "patients/{id}")]
+            HttpRequest req,
+
             [CosmosDB(databaseName: "cosmosdb-covid19", collectionName: "patients",
                 ConnectionStringSetting = "CosmosDBConnectionString",
-                SqlQuery = "SELECT c.id, c.position, c.isSuspected FROM c")]
+                SqlQuery = "SELECT * FROM c WHERE c.id = {id}")]
             IEnumerable<dynamic> positions,
             ILogger log)
         {
