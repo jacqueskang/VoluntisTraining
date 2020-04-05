@@ -60,3 +60,6 @@ foreach ($Item in $Subscriptions) {
 		Write-Host "Event subscription '$EventSubscriptionName' is already created. Skipping..."
 	}
 }
+
+# Enable storage account static website hosting
+Enable-AzStorageStaticWebsite -Context $StorageAccount.Context -IndexDocument "index.html" -ErrorDocument404Path "error.html"
