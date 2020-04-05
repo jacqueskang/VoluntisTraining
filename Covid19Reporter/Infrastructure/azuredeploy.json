@@ -142,7 +142,12 @@
           ],
           "connectionStrings": [],
           "ipSecurityRestrictions": [],
-          "scmIpSecurityRestrictions": []
+          "scmIpSecurityRestrictions": [],
+          "cors": {
+            "allowedOrigins": [
+              "http://localhost:62194"
+            ]
+          }
         },
         "httpsOnly": true
       }
