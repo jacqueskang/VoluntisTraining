@@ -22,7 +22,7 @@
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
     });
 
-    var api = 'https://fun-covid19-nchikkdvlumow.azurewebsites.net/api'
+    var api = '/api'
 
     $(document).ready(function () {
         $.getJSON(`${api}/patients`, function (patients) {
